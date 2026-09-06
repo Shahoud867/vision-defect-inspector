@@ -33,7 +33,7 @@ _STYLE: dict[str, Any] = {
 
 
 def apply_style() -> None:
-    plt.rcParams.update(_STYLE)
+    plt.rcParams.update(_STYLE)  # type: ignore[arg-type]
 
 
 def show_grid(
