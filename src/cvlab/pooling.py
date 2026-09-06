@@ -77,11 +77,8 @@ def pool2d(
     if arr.ndim != 2:
         raise ValueError(f"feature_map must be 2-D or 3-D; got shape {arr.shape!r}")
 
-    win, out_h, out_w = _window_view(arr, ph, pw, stride)
-    if mode == "max":
-        pooled = np.max(win, axis=(2, 3))
-    else:
-        pooled = np.mean(win, axis=(2, 3))
+    win = _window_view(arr, ph, pw, stride)[0]
+    pooled = np.max(win, axis=(2, 3)) if mode == "max" else np.mean(win, axis=(2, 3))
     return np.ascontiguousarray(pooled)
 
 
