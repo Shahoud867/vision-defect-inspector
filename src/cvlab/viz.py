@@ -5,10 +5,10 @@ on head-less machines.
 """
 
 from __future__ import annotations
-from typing import Any
 
 from collections.abc import Iterable, Sequence
 from pathlib import Path
+from typing import Any
 
 import matplotlib
 
