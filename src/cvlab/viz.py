@@ -5,6 +5,7 @@ on head-less machines.
 """
 
 from __future__ import annotations
+from typing import Any
 
 from collections.abc import Iterable, Sequence
 from pathlib import Path
@@ -18,7 +19,7 @@ __all__ = ["FIGURE_DPI", "apply_style", "show_grid", "save_figure"]
 
 FIGURE_DPI = 150
 
-_STYLE = {
+_STYLE: dict[str, Any] = {
     "figure.facecolor": "white",
     "savefig.facecolor": "white",
     "savefig.bbox": "tight",
