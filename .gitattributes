@@ -1,0 +1,18 @@
+# Normalise line endings: LF in the repo, native in the working tree.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.pdf  binary
+*.ipynb text eol=lf
+
+# Keep Windows helper scripts CRLF locally.
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+
+# GitHub language stats: don't count generated/vendored content.
+output_images/**  linguist-generated
+results/**        linguist-generated
+report/*.pdf      linguist-generated
+notebooks/**      linguist-documentation
