@@ -1,0 +1,8 @@
+# latexmk configuration for the Assignment 1 report.
+$pdf_mode = 1;                       # pdflatex
+$bibtex_use = 2;                     # run bibtex, clean .bbl on -C
+$out_dir = 'build';
+$pdf_previewer = 'start';
+$clean_ext = 'bbl run.xml synctex.gz nav snm';
+@default_files = ('main.tex', 'supplementary.tex');
+$max_repeat = 5;

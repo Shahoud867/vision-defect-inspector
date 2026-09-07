@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "cvlab: from-scratch spatial filtering and Canny edge detection in NumPy"
+abstract: >-
+  A production-grade implementation of 2D/3D spatial convolution, Gaussian and
+  unsharp filtering, pooling with analytical gradients, and a four-stage Canny
+  edge detector, built from first principles for industrial defect inspection
+  and surface-crack detection. Course project for CS4059 Fundamentals of
+  Computer Vision, FAST-NUCES, Fall 2026.
+type: software
+authors:
+  - given-names: Shahoud
+    family-names: Shahid
+    email: shahoudshahid652@gmail.com
+    affiliation: "FAST National University of Computer and Emerging Sciences"
+version: "1.0.0"
+date-released: "2026-09-14"
+license: MIT
+keywords:
+  - computer-vision
+  - convolution
+  - canny-edge-detection
+  - non-maximum-suppression
+  - hysteresis
+  - scale-space
+  - crack-detection
+  - numpy
