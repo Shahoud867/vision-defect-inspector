@@ -1,0 +1,64 @@
+% ==========================================================================
+%  CS4059 Fundamentals of Computer Vision -- Assignment 1
+%  Industrial Defect Inspection & Surface-Crack Detection via Custom Linear
+%  Filtering and Edge Processing.
+%
+%  Shahoud Shahid (23i-2515), Section DS-A -- FAST-NUCES, Fall 2026
+%
+%  Build:  latexmk -pdf main.tex        (see report/README.md)
+%  This is the 4-page submission report.  A longer technical companion with
+%  full derivations, code listings and every figure is in supplementary.tex.
+% ==========================================================================
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\input{preamble}
+
+\begin{document}
+
+\title{Industrial Defect Inspection and Surface-Crack Detection\\
+via Custom Linear Filtering and First-Principles Canny Edge Processing}
+
+\author{%
+  \IEEEauthorblockN{Shahoud Shahid}
+  \IEEEauthorblockA{Roll No.\ 23i-2515 \quad Section DS-A\\
+    Department of Artificial Intelligence and Data Science\\
+    FAST National University of Computer and Emerging Sciences\\
+    \texttt{shahoudshahid652@gmail.com}}
+}
+
+\maketitle
+
+\begin{abstract}
+We implement an industrial visual-inspection pipeline from mathematical first
+principles in vectorised NumPy: generalised 2-D/3-D convolution engines, an
+isotropic Gaussian generator, unsharp masking, max/average pooling with
+analytical gradients, and an exact four-stage Canny edge detector (Sobel
+gradients, 4-sector non-maximum suppression, double thresholding, 8-connected
+hysteresis). No built-in filtering primitive (\code{cv2.filter2D},
+\code{cv2.Sobel}, \code{cv2.Canny}) is used. Benchmarking on \PCB{} and
+\CRACK{} imagery, ablations quantify each stage: Gaussian pre-smoothing cuts the
+gradient-noise standard deviation by up to $4.7\times$; non-maximum suppression
+thins gradient bands by $8.1\times$; and double-threshold hysteresis lifts
+crack-detection $F_1$ from $0.943$ to $0.988$ while reducing the number of
+disconnected fragments from $40$ to $12$. We verify Witkin scale-space
+causality, map the $(\Thi,\Tlo)$ operating regime on a $3\times3$ grid, and
+analyse two Canny failure modes.
+\end{abstract}
+
+\begin{IEEEkeywords}
+convolution, Canny edge detection, non-maximum suppression, hysteresis,
+scale space, crack detection, defect inspection, NumPy.
+\end{IEEEkeywords}
+
+\input{sections/01_introduction}
+\input{sections/02_methods}
+\input{sections/03_setup}
+\input{sections/04_results}
+\input{sections/05_failure}
+\input{sections/06_conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
