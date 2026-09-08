@@ -1,0 +1,109 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cvlab-defect-inspection"
+version = "1.0.0"
+description = "From-scratch NumPy convolution, filtering and Canny edge-detection pipeline for industrial defect inspection and surface-crack profiling."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Shahoud Shahid", email = "shahoudshahid652@gmail.com" }]
+keywords = [
+    "computer-vision",
+    "convolution",
+    "canny-edge-detection",
+    "image-processing",
+    "numpy",
+    "defect-inspection",
+    "crack-detection",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+    "numpy>=1.24",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+io = ["opencv-python-headless>=4.8"]
+data = ["kagglehub>=0.3"]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "pre-commit>=3.6",
+    "scipy>=1.10",
+]
+
+[project.urls]
+Homepage = "https://github.com/shahoud-shahid/industrial-defect-canny"
+Repository = "https://github.com/shahoud-shahid/industrial-defect-canny"
+Issues = "https://github.com/shahoud-shahid/industrial-defect-canny/issues"
+
+[project.scripts]
+cvlab = "cvlab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["cvlab*", "experiments*"]
+
+[tool.setuptools.package-data]
+cvlab = ["py.typed"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "oracle: cross-checks against SciPy reference implementations (dev-only)",
+]
+filterwarnings = ["error::RuntimeWarning"]
+
+[tool.coverage.run]
+branch = true
+source = ["cvlab"]
+omit = ["src/cvlab/cli.py", "src/cvlab/viz.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError", "if __name__ == .__main__.:"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+extend-exclude = ["notebooks", ".venv", "build", "report"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "RUF", "NPY"]
+ignore = [
+    "N802", "N803", "N806",  # allow math-style names (H, W, Sx, conv2D, ...)
+    "RUF022",                # __all__ is grouped by task on purpose, not alphabetised
+    "E741",                  # single-letter names (l, I) are fine for pixel math
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Visualisation drivers: paired `ax.set_*()` calls on one line read better than split.
+"src/experiments/*" = ["E501", "E702"]
+"tests/*" = ["E501", "E731"]
+"scripts/*" = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+ignore_missing_imports = true
+disallow_untyped_defs = false
+files = ["src/cvlab"]
