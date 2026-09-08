@@ -1,0 +1,86 @@
+% ==========================================================================
+%  Shared preamble for the Assignment 1 report (IEEE conference class).
+%  Kept separate from main.tex so the supplementary document can reuse it.
+% ==========================================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\graphicspath{{figures/}{../output_images/}}
+\usepackage{subcaption}
+\captionsetup{font=small,labelfont=bf}
+\captionsetup[sub]{font=footnotesize}
+
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{siunitx}
+\sisetup{
+  detect-weight          = true,
+  detect-family          = true,
+  table-number-alignment = center,
+  group-digits           = false,
+}
+% Numbers are written already-rounded in the source; siunitx only typesets them.
+
+\usepackage{xcolor}
+\definecolor{codebg}{gray}{0.96}
+\definecolor{codekw}{RGB}{0,80,160}
+\definecolor{codecomment}{RGB}{110,110,110}
+\definecolor{codestr}{RGB}{160,40,40}
+
+\usepackage{listings}
+\lstdefinestyle{py}{
+  language=Python,
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestr},
+  numbers=left, numberstyle=\tiny\color{codecomment}, numbersep=6pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single, framerule=0pt,
+  columns=fullflexible,
+  keepspaces=true,
+  aboveskip=6pt, belowskip=4pt,
+}
+\lstset{style=py}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}  % allow URLs (e.g. in footnotes) to break at any character
+\usepackage[nameinlink,capitalise]{cleveref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+
+% Let TeX relax spacing rather than emit badness-10000 lines in the narrow
+% two-column measure (unbreakable \code{} / \SI{} tokens are the usual cause).
+\emergencystretch=3em
+\hbadness=9000  % silence mild loose-line reports; genuine badness-10000 still shows
+
+% Figure-heavy paper: allow denser float packing than the LaTeX defaults.
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.82}
+
+% ----- project-wide macros ------------------------------------------------
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\conv}{\ensuremath{*}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\Sx}{\ensuremath{S_x}}
+\newcommand{\Sy}{\ensuremath{S_y}}
+\newcommand{\Thi}{\ensuremath{T_{\text{high}}}}
+\newcommand{\Tlo}{\ensuremath{T_{\text{low}}}}
+\newcommand{\grad}{\ensuremath{\nabla}}
+\newcommand{\Fout}{\ensuremath{F_{\text{sharp}}}}
+
+% Consistent references to the two datasets
+\newcommand{\PCB}{\textsc{pcb-defect}}
+\newcommand{\CRACK}{\textsc{surface-crack}}
