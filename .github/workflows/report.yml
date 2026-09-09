@@ -1,0 +1,46 @@
+name: Build report
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "report/**"
+      - "output_images/**"
+      - ".github/workflows/report.yml"
+  pull_request:
+    paths:
+      - "report/**"
+  workflow_dispatch:
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile report.pdf (4-page IEEE submission)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: report
+          root_file: main.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+
+      - name: Compile supplementary.pdf
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: report
+          root_file: supplementary.tex
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+
+      - name: Collect PDFs
+        run: |
+          mkdir -p _pdf
+          cp "$(find report -name main.pdf -print -quit)" _pdf/report.pdf
+          cp "$(find report -name supplementary.pdf -print -quit)" _pdf/supplementary.pdf
+          ls -la _pdf
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report-pdfs
+          path: _pdf/*.pdf
+          if-no-files-found: error

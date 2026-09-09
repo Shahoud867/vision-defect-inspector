@@ -1,0 +1,26 @@
+\section{Experimental Setup}
+\label{sec:setup}
+
+\paragraph{Datasets}
+The brief specifies two Kaggle benchmarks: \PCB{}%
+\footnote{\url{https://www.kaggle.com/datasets/akhatova/pcb-defects}}
+(board defects: mouse bites, spurs, shorts, opens) and \CRACK{}%
+\footnote{\url{https://www.kaggle.com/datasets/arunrk7/surface-crack-detection}}
+(concrete cracks under diverse lighting). Both need credentials, so the loader
+(\code{cvlab.datasets.get\_samples}) reads real images from \code{data/raw/}
+when present and otherwise synthesises statistically-matched stand-ins:
+orthogonal copper traces with pads and injected defects for \PCB{}; a
+fractal-noise concrete surface with a radial illumination gradient and thin,
+depth-modulated dark cracks for \CRACK{}. Each synthetic image ships an exact
+ground-truth edge mask; \code{--data-dir} re-runs every experiment on the real
+sets unchanged.
+
+\paragraph{Metrics}
+Against ground truth: tolerance-aware precision $P$, recall $R$, $F_1$ (a hit
+within Chebyshev distance $2$). Reference-free: edge density, 8-connected
+component count, mean component length.
+
+\paragraph{Configuration}
+Image size $256^2$, master seed \num{2515}, Gaussian pre-smoothing $\sigma=1.4$
+unless stated; additive noise $\mathcal{N}(0,\sigma_n^2)$ in 8-bit units. The
+full five-task suite runs in \SI{\approx16}{\second} on a laptop CPU.
