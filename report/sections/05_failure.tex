@@ -1,0 +1,33 @@
+\section{Failure Case Analysis}
+\label{sec:failure}
+
+\Cref{fig:fail} shows two scenarios where Canny --- a pure first-order-gradient
+detector with no notion of semantics --- fails. In both, crack recall stays at
+\num{1.0} but precision collapses ($P=\num{0.41}$ and $P=\num{0.35}$).
+
+\paragraph{Strong cast-shadow contour}
+A hard shadow boundary is a genuine intensity step, so it produces a Sobel
+response \emph{larger} than the crack; NMS keeps it and no $(\Thi,\Tlo)$ removes
+it without also removing the crack. The limitation is definitional: Canny
+detects \emph{intensity} edges, but a shadow is an \emph{illumination} edge, not
+surface geometry. Separating them needs illumination modelling (retinex /
+homomorphic) or colour, which a single-channel gradient lacks.
+
+\paragraph{High-frequency texture}
+On coarse aggregate the surface is itself full of small intensity steps whose
+magnitudes match the faint crack, so (i) no global threshold separates signal
+from texture, and (ii) hysteresis worsens it --- the texture edges form a
+percolating 8-connected web, so one strong seed floods large areas. The output
+is an "edge soup" (73 components) in which the crack is not distinguishable by
+connectivity. The limitation is scale: a fixed-$\sigma$ gradient cannot tell
+which edges belong to a structure of interest. Remedies: oriented crack-matched
+filters, multi-scale ridge measures (Frangi), or a learned segmenter.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.7\linewidth]{task5_failure_cases.png}
+  \caption{Failure cases. Row 1: a cast-shadow contour becomes a strong false
+  edge. Row 2: dense texture yields a fragmented map that buries the crack.
+  Columns: input, Canny output, ground truth.}
+  \label{fig:fail}
+\end{figure}
