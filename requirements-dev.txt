@@ -1,0 +1,16 @@
+-r requirements.txt
+
+# Testing
+pytest>=7.4
+pytest-cov>=4.1
+
+# Lint / format / types
+ruff>=0.4
+mypy>=1.8
+pre-commit>=3.6
+
+# Oracle cross-checks in tests (dev-only; core library never imports scipy)
+scipy>=1.10
+
+# Real-dataset download helper
+kagglehub>=0.3

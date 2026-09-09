@@ -1,0 +1,99 @@
+% ==========================================================================
+%  Extended technical companion to the 4-page IEEE report (NOT the submission).
+%  Adds a title page, table of contents, lists of figures/tables, full
+%  derivations, complete algorithm listings and an appendix.  Portfolio use.
+% ==========================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{abstract}
+
+\def\SUPPLEMENTARY{}  % enables extra figures/derivation refs in shared sections
+
+\input{preamble}
+
+\usepackage{tocloft}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small CS4059 -- Assignment 1 (Supplementary)}
+\fancyhead[R]{\small Shahoud Shahid \textbullet{} 23i-2515}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+  pdftitle={Industrial Defect Inspection and Surface-Crack Detection -- Supplementary},
+  pdfauthor={Shahoud Shahid (23i-2515)},
+  bookmarksnumbered=true,
+}
+
+\begin{document}
+
+% -------------------------------------------------- title page
+\begin{titlepage}
+  \centering
+  \vspace*{1.5cm}
+  {\Large\bfseries FAST National University of Computer and Emerging Sciences\par}
+  \vspace{0.3cm}
+  {\large Department of Artificial Intelligence and Data Science\par}
+  \vspace{2.2cm}
+  {\bfseries\Large CS4059 -- Fundamentals of Computer Vision\par}
+  \vspace{0.4cm}
+  {\large Fall 2026 \quad\textbullet\quad Assignment 1\par}
+  \vspace{1.6cm}
+  \rule{\linewidth}{0.5pt}\\[0.5cm]
+  {\huge\bfseries Industrial Defect Inspection \&\\[0.3cm]
+   Surface-Crack Detection\par}
+  \vspace{0.4cm}
+  {\large via Custom Linear Filtering and First-Principles Canny Edge Processing\par}
+  \vspace{0.3cm}
+  \rule{\linewidth}{0.5pt}\\[1.6cm]
+  {\large\itshape Extended Technical Companion\par}
+  \vspace{0.3cm}
+  {\small (the 4-page assessed report is \texttt{report.pdf})\par}
+  \vfill
+  \begin{tabular}{rl}
+    \textbf{Name}        & Shahoud Shahid \\
+    \textbf{Roll Number} & 23i-2515 \\
+    \textbf{Section}     & DS-A \\
+    \textbf{Date}        & \today \\
+  \end{tabular}
+  \vspace{1cm}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+\begin{abstract}
+\noindent This companion reproduces the assessed report and adds the material
+that does not fit the 4-page limit: the full max-pooling Jacobian derivation,
+a proof sketch of scale-space causality via the heat equation, complete
+algorithm listings for every stage, the entire $3\times3$ sensitivity grid for
+both datasets, and an appendix documenting assumptions and the
+required-vs-enhancement split. All numbers are regenerated from seed
+\num{2515} by \code{cvlab all}.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_methods}
+\input{sections/03_setup}
+\input{sections/04_results}
+\input{sections/05_failure}
+\input{sections/06_conclusion}
+
+\appendix
+\input{sections/A_derivations}
+\input{sections/B_assumptions}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
