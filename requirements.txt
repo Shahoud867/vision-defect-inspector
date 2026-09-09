@@ -1,0 +1,8 @@
+# Runtime dependencies for the cvlab pipeline.
+# Pinned loosely for reproducibility; CI tests 3.10-3.12.
+# For a fully reproducible lock, use:  pip install -e ".[dev,io,data]"
+numpy>=1.24,<3
+matplotlib>=3.7,<4
+
+# Optional but recommended (image I/O for real datasets):
+opencv-python-headless>=4.8 ; platform_system != "Emscripten"

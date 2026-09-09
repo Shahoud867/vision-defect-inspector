@@ -1,0 +1,24 @@
+\section{Introduction}
+\label{sec:intro}
+
+Automated surface inspection is the first line of defence in high-precision
+manufacturing (solar cells, silicon wafers, turbine blades) and in structural
+health monitoring of concrete. Field imagery is degraded by shot noise, motion
+blur and non-uniform illumination, so a robust inspection pipeline must combine
+noise attenuation, contrast enhancement and sub-pixel-stable edge localisation.
+
+This work builds that pipeline from scratch, following the classical
+formulations of Canny~\cite{canny1986} and Gaussian scale
+space~\cite{witkin1983,lindeberg1994}. Every operator is derived from its
+defining equation in pure vectorised NumPy~\cite{harris2020numpy}; OpenCV is
+restricted to image \emph{I/O}. The contributions are:
+(i) strided \code{conv2d}/\code{conv3d} engines that satisfy the discrete
+spatial-size formula exactly, as a single \code{einsum} over a sliding-window
+view (\cref{sec:conv}); (ii) a closed-form unit-gain Gaussian, unsharp masking,
+and max/average pooling with analytical back-propagation matrices
+(\cref{sec:enh}); (iii) a four-stage Canny detector --- normalised Sobel,
+vectorised 4-sector NMS, and 8-connected hysteresis (two implementations,
+asserted equal) --- in \cref{sec:canny}; and (iv) stage-wise ablations with
+tolerance-aware $P/R/F_1$ against ground truth, a $(\Thi,\Tlo)$ sensitivity
+grid, a check of scale-space causality, and two failure-mode analyses
+(\cref{sec:results,sec:failure}).
