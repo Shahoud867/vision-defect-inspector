@@ -1,0 +1,124 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Generalised convolution engines}
+\label{sec:conv}
+
+For an input of spatial size $I$, filter size $F$, symmetric zero-padding $P$
+and stride $S$, the output size is
+\begin{equation}
+  O = \left\lfloor \frac{I - F + 2P}{S} \right\rfloor + 1 .
+  \label{eq:convsize}
+\end{equation}
+\code{conv2d(image, kernel, stride, padding)} supports \code{'same'}
+($P=(F-1)/2$, size-preserving only at $S=1$) and \code{'valid'} ($P=0$). We use
+spatial \emph{cross-correlation} (no kernel flip): standard in modern
+CV~\cite{szeliski2022}, permitted by the brief, and reversible via a
+\code{flip\_kernel} flag. The engine takes a read-only sliding-window view
+$\mathcal{W}\in\R^{O_h\times O_w\times F\times F}$
+(\code{sliding\_window\_view}), strides it, and contracts against the kernel in
+one call: \code{einsum("ijhw,hw->ij", W, K)}. A $512^2$ image with a $5\times5$
+kernel takes \SI{\approx3}{\milli\second}. The output shape matches
+\cref{eq:convsize} for all seven test geometries in
+\code{results/task1\_shape\_verification.json} (e.g.\ a $32\times32$ input, $F=5$,
+\code{valid} $\rightarrow 28\times28$).
+
+\code{conv3d} takes a volume $\R^{H\times W\times C}$ and $K$ kernels
+$\R^{F\times F\times C}$; each filter multiplies element-wise across all $C$
+channels and sums the $F\!\cdot\!F\!\cdot\!C$ products. A single
+\code{einsum("ijhwc,khwc->ijk", W, stack)} evaluates all $K$ filters at once,
+producing activations $\R^{O_h\times O_w\times K}$.
+
+\subsection{Gaussian smoothing, unsharp masking, pooling}
+\label{sec:enh}
+
+\paragraph{Isotropic Gaussian}
+\code{generate\_gaussian\_kernel\_2d} evaluates
+\begin{equation}
+  G_\sigma(x,y)=\frac{1}{2\pi\sigma^2}\exp\!\left(-\frac{x^2+y^2}{2\sigma^2}\right)
+  \label{eq:gauss}
+\end{equation}
+on a \code{meshgrid} centred at the middle tap, then rescales so
+$\sum_{x,y}G_\sigma=1$ exactly, removing the truncation error of the finite
+window. Separable $1$-D passes give an identical result in $O(k)$ rather than
+$O(k^2)$.
+
+\paragraph{Unsharp masking}
+The high-pass detail signal $F - F\conv G_\sigma$ is re-injected with gain
+$\alpha$:
+\begin{equation}
+  \Fout = F + \alpha\,\bigl(F - F \conv G_\sigma\bigr),
+  \label{eq:unsharp}
+\end{equation}
+clipped to $[0,255]$. With $\sigma=1.5,\ \alpha=1.2$ the high-frequency energy
+(mean absolute Laplacian response) rises by \SI{13.5}{\percent} on \PCB{} and
+\SI{10.8}{\percent} on \CRACK{}, sharpening trace edges and micro-cracks
+without halo artefacts (\code{pad\_mode='reflect'}).
+
+\paragraph{Pooling and its gradient}
+\code{pool2d} reduces non-overlapping / strided windows by \code{max} or
+\code{average}. For the $2\times2$ block from the brief,
+\begin{equation}
+  X=\begin{bmatrix} 8 & 7\\ 12 & 9\end{bmatrix},\qquad
+  \text{max-pool}(X)=12 ,
+\end{equation}
+the analytical Jacobian of the scalar output w.r.t.\ each input is
+\begin{equation}
+  \frac{\partial\,\text{Output}}{\partial\,\text{Input}}
+  =\begin{bmatrix} 0 & 0\\ 1 & 0\end{bmatrix}.
+  \label{eq:maxpoolgrad}
+\end{equation}
+\emph{Why gradients route only to the maximum:} with
+$\text{out}=\max_k x_k=x_{k^\star}$, perturbing the winner gives
+$\partial\,\text{out}/\partial x_{k^\star}=1$, while perturbing any other
+element (still below $x_{k^\star}$) does not change the maximum, so its
+derivative is $0$. Max-pooling is locally a hard, input-dependent
+\emph{selector}; average pooling instead spreads the gradient uniformly at
+$1/(p_h p_w)=0.25$. \Cref{eq:maxpoolgrad} matches a finite-difference check to
+\num{1e-6}.
+
+\subsection{Four-stage Canny edge detector}
+\label{sec:canny}
+
+\paragraph{Stage 1 -- gradients}
+The grayscale image (BT.601 luma) is optionally Gaussian pre-smoothed, then
+convolved with the normalised Sobel operators
+\begin{equation}
+  \Sx=\tfrac{1}{8}\!\begin{bmatrix}-1&0&1\\-2&0&2\\-1&0&1\end{bmatrix},\ \
+  \Sy=\tfrac{1}{8}\!\begin{bmatrix}1&2&1\\0&0&0\\-1&-2&-1\end{bmatrix},
+\end{equation}
+giving magnitude $M=\sqrt{\Sx^2+\Sy^2}$ and orientation
+$\theta=\operatorname{atan2}(\Sy,\Sx)$. Reflect padding avoids spurious border
+gradients.
+
+\paragraph{Stage 2 -- non-maximum suppression}
+$\theta$ is mapped to $[0,180)^{\circ}$ and quantised into four sectors
+($0,45,90,135^{\circ}\!\pm\!22.5^{\circ}$). A pixel is kept only if $M$ is
+\emph{strictly greater} than both neighbours along the gradient direction
+(horizontal, diagonal, vertical, anti-diagonal respectively); borders are
+zeroed. The test is vectorised by pre-shifting eight padded copies of $M$ and
+selecting per-sector with \code{np.select}, so NMS is $O(HW)$ with no Python
+loop.
+
+\paragraph{Stage 3 -- double threshold + hysteresis}
+Pixels are \emph{strong} ($M\!\ge\!\Thi$), \emph{weak}
+($\Tlo\!\le\!M\!<\!\Thi$) or non-edge; weak pixels are kept iff 8-connected
+(directly or transitively) to a strong pixel. Two implementations are asserted
+identical: a deque BFS flood-fill from the strong
+seeds\ifdefined\SUPPLEMENTARY{} (\cref{lst:hyst})\fi, and a fixed-point
+8-connected dilation constrained to \code{strong|weak}. Thresholds are absolute
+or, by default, quantiles of the non-zero NMS response.
+
+\ifdefined\SUPPLEMENTARY
+\begin{lstlisting}[caption={8-connected hysteresis (BFS core).},label=lst:hyst,float=t]
+q = deque(zip(*np.where(strong)))
+out[strong] = 255
+while q:
+    ci, cj = q.popleft()
+    for ni in range(max(0, ci-1), min(H, ci+2)):
+        for nj in range(max(0, cj-1), min(W, cj+2)):
+            if weak[ni, nj] and out[ni, nj] == 0:
+                out[ni, nj] = 255
+                q.append((ni, nj))
+\end{lstlisting}
+\fi
