@@ -1,0 +1,17 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+A complete inspection pipeline --- strided 2-D/3-D convolution, Gaussian and
+unsharp filtering, pooling with analytical gradients, and an exact four-stage
+Canny detector --- was built from first principles in vectorised NumPy and
+validated by \num{124} unit tests. The ablations quantify each stage: Gaussian
+pre-smoothing suppresses gradient noise up to \SI{4.7}{\times}; NMS thins ridges
+\SI{8.1}{\times}; hysteresis raises crack $F_1$ to \num{0.988} with a
+\SI{70}{\percent} drop in fragment count. Scale-space behaviour matches Witkin
+causality and the $(\Thi,\Tlo)$ sweep confirms the high-$\Thi$,
+$2$--$3\!:\!1$-ratio regime. The failure analysis exposes the ceiling of a
+gradient-only detector: shadows and dense texture defeat it because they are
+real intensity edges. Future work: illumination-invariant pre-processing,
+oriented crack-matched filters, multi-scale ridge fusion. \emph{Repro:}
+\code{cvlab all} regenerates every figure from seed \num{2515};
+see \code{README.md} and the supplementary.
