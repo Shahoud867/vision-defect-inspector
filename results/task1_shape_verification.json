@@ -1,0 +1,124 @@
+{
+  "all_pass": true,
+  "cases": [
+    {
+      "F": 3,
+      "H": 32,
+      "W": 32,
+      "actual": [
+        32,
+        32
+      ],
+      "formula": [
+        32,
+        32
+      ],
+      "match": true,
+      "pad_width": 1,
+      "padding": "same",
+      "stride": 1
+    },
+    {
+      "F": 3,
+      "H": 32,
+      "W": 32,
+      "actual": [
+        30,
+        30
+      ],
+      "formula": [
+        30,
+        30
+      ],
+      "match": true,
+      "pad_width": 0,
+      "padding": "valid",
+      "stride": 1
+    },
+    {
+      "F": 5,
+      "H": 32,
+      "W": 32,
+      "actual": [
+        28,
+        28
+      ],
+      "formula": [
+        28,
+        28
+      ],
+      "match": true,
+      "pad_width": 0,
+      "padding": "valid",
+      "stride": 1
+    },
+    {
+      "F": 3,
+      "H": 32,
+      "W": 32,
+      "actual": [
+        15,
+        15
+      ],
+      "formula": [
+        15,
+        15
+      ],
+      "match": true,
+      "pad_width": 0,
+      "padding": "valid",
+      "stride": 2
+    },
+    {
+      "F": 3,
+      "H": 31,
+      "W": 45,
+      "actual": [
+        16,
+        23
+      ],
+      "formula": [
+        16,
+        23
+      ],
+      "match": true,
+      "pad_width": 1,
+      "padding": "same",
+      "stride": 2
+    },
+    {
+      "F": 7,
+      "H": 64,
+      "W": 64,
+      "actual": [
+        20,
+        20
+      ],
+      "formula": [
+        20,
+        20
+      ],
+      "match": true,
+      "pad_width": 0,
+      "padding": "valid",
+      "stride": 3
+    },
+    {
+      "F": 5,
+      "H": 28,
+      "W": 28,
+      "actual": [
+        14,
+        14
+      ],
+      "formula": [
+        14,
+        14
+      ],
+      "match": true,
+      "pad_width": 2,
+      "padding": "same",
+      "stride": 2
+    }
+  ]
+}
