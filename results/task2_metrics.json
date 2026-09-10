@@ -1,0 +1,58 @@
+{
+  "pooling": {
+    "analytic_gradient": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "average_pool_gradient": [
+      [
+        0.25,
+        0.25
+      ],
+      [
+        0.25,
+        0.25
+      ]
+    ],
+    "gradients_match": true,
+    "input": [
+      [
+        8.0,
+        7.0
+      ],
+      [
+        12.0,
+        9.0
+      ]
+    ],
+    "max_pool_output": 12.0,
+    "numeric_gradient": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.9999999992515995,
+        0.0
+      ]
+    ]
+  },
+  "unsharp": {
+    "concrete": {
+      "high_freq_gain": 1.108201941876338,
+      "input_std": 14.71734735318047,
+      "sharpened_std": 16.309792917171382
+    },
+    "pcb": {
+      "high_freq_gain": 1.1352241231564069,
+      "input_std": 77.51562734145294,
+      "sharpened_std": 87.99761008075494
+    }
+  }
+}
