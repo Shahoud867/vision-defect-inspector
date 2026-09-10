@@ -1,0 +1,63 @@
+{
+  "config": {
+    "seed": 2515,
+    "dpi": 150,
+    "image_size": 256,
+    "prefer": "auto",
+    "out_dir": "C:\\Users\\shaho\\OneDrive - FAST National University\\Attachments\\@Fast\\Semester 7\\Computer Vision\\Assignment 1\\output_images"
+  },
+  "tasks": {
+    "task1": {
+      "seconds": 1.32,
+      "artefacts": [
+        "results\\task1_shape_verification.json",
+        "output_images\\task1_conv2d_kernels.png",
+        "output_images\\task1_conv2d_strided.png",
+        "output_images\\task1_conv3d_activations.png"
+      ]
+    },
+    "task2": {
+      "seconds": 3.74,
+      "artefacts": [
+        "output_images\\task2_gaussian_kernels.png",
+        "output_images\\task2_unsharp_mask.png",
+        "output_images\\task2_unsharp_alpha_sweep.png",
+        "output_images\\task2_pooling.png",
+        "output_images\\task2_pooling_gradients.png",
+        "results\\task2_metrics.json"
+      ]
+    },
+    "task3": {
+      "seconds": 4.28,
+      "artefacts": [
+        "output_images\\task3_canny_pcb.png",
+        "output_images\\task3_canny_concrete.png",
+        "output_images\\task3_canny_summary.png",
+        "results\\task3_metrics.json"
+      ]
+    },
+    "task4": {
+      "seconds": 4.53,
+      "artefacts": [
+        "output_images\\task4_ablation1_noise_smoothing.png",
+        "output_images\\task4_ablation1_noise_smoothing_full.png",
+        "output_images\\task4_ablation2_nms.png",
+        "output_images\\task4_ablation3_hysteresis.png",
+        "results\\task4_metrics.json"
+      ]
+    },
+    "task5": {
+      "seconds": 7.86,
+      "artefacts": [
+        "output_images\\task5_scale_space.png",
+        "output_images\\task5_scale_space_full.png",
+        "output_images\\task5_scale_space_causality.png",
+        "output_images\\task5_sensitivity_grid_concrete.png",
+        "output_images\\task5_sensitivity_grid_pcb.png",
+        "output_images\\task5_failure_cases.png",
+        "output_images\\task5_failure_texture_detail.png",
+        "results\\task5_metrics.json"
+      ]
+    }
+  }
+}
