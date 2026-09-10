@@ -1,0 +1,49 @@
+\section{Assumptions and Scope}
+\label{app:assume}
+
+\subsection{Assumptions}
+\begin{enumerate}
+  \item \textbf{Datasets.} The Kaggle \PCB{} and \CRACK{} sets need
+  credentials, so they are not committed. When absent, the loader synthesises
+  statistically-matched stand-ins with exact ground truth. Running
+  \code{python scripts/download\_data.py} (Kaggle token in \code{\textasciitilde/.kaggle})
+  then \code{cvlab all --data-dir data/raw} regenerates every figure on the
+  real data unchanged.
+  \item \textbf{Cross-correlation} is used for all spatial filtering (brief
+  \S1.2); kernels are odd-sized; \code{'same'} padding preserves size only at
+  stride 1 (\cref{eq:convsize}).
+  \item \textbf{Border handling.} Blur and Sobel use \code{reflect} padding
+  (not zero) to avoid a dark rim and false border gradients; NMS then zeroes
+  the 1-px border as the brief requires.
+  \item \textbf{Thresholds.} Default $(\Thi,\Tlo)$ are quantiles of the
+  non-zero NMS response (illumination-robust); absolute values are accepted
+  too. Grayscale conversion uses BT.601 luma.
+  \item \textbf{Determinism.} Every stochastic step takes an explicit
+  \code{numpy.random.Generator}; the master seed is \num{2515}.
+\end{enumerate}
+
+\subsection{Required vs.\ enhancement}
+\begin{table}[h]
+  \centering
+  \caption{What is assessed vs.\ what is a production/portfolio addition.}
+  \label{tab:scope}
+  \small
+  \begin{tabular}{p{0.44\linewidth}p{0.48\linewidth}}
+    \toprule
+    \textbf{Required by the brief} & \textbf{Added (does not change grading)} \\
+    \midrule
+    \code{conv2d}/\code{conv3d}; Gaussian kernel; unsharp mask;
+    \code{pool2d} (max/avg) + max-pool gradient answer; Sobel; 4-sector NMS;
+    double-threshold 8-connected hysteresis; the five ablation / analysis
+    experiments; a \(\le\)4-page report.
+    &
+    Vectorised \code{einsum} conv; separable Gaussian; second hysteresis
+    implementation (fixed-point dilation) cross-checked vs.\ BFS;
+    quantile auto-thresholds; \num{124} \code{pytest} unit tests + coverage;
+    tolerance-aware $P/R/F_1$ metrics; synthetic datasets with ground truth;
+    \code{cvlab} CLI; CI workflow; packaging (\code{pyproject.toml});
+    this supplementary document.
+    \\
+    \bottomrule
+  \end{tabular}
+\end{table}
