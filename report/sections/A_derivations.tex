@@ -1,0 +1,60 @@
+\section{Full Derivations}
+\label{app:deriv}
+
+\subsection{Max-pooling Jacobian}
+\label{app:maxpool}
+Let a pooling window hold inputs $x_1,\dots,x_n$ (row-major; for the brief
+$n=4$, $x=(8,7,12,9)$). The forward map is $y=\max_k x_k$. Assume a unique
+maximiser $k^\star=\arg\max_k x_k$ (here $k^\star=3$, $x_{k^\star}=12$). For
+$\varepsilon$ small enough that the ordering is preserved:
+\begin{align}
+  y(x_{k^\star}+\varepsilon) &= x_{k^\star}+\varepsilon
+    &&\Rightarrow\quad \frac{\partial y}{\partial x_{k^\star}} = 1, \\
+  y(x_{k}+\varepsilon) &= x_{k^\star} \ \ (k\neq k^\star)
+    &&\Rightarrow\quad \frac{\partial y}{\partial x_{k}} = 0 .
+\end{align}
+Hence, reshaped to the $2\times2$ block,
+\begin{equation}
+  \frac{\partial\,\text{Output}}{\partial\,\text{Input}}
+  = \begin{bmatrix} 0 & 0 \\ 1 & 0 \end{bmatrix}.
+\end{equation}
+In back-propagation the upstream gradient $g$ of the pooled cell is therefore
+\emph{routed} entirely to position $k^\star$ and every other input receives
+zero: max-pooling is a data-dependent hard router / gate. (Ties are resolved to
+the first maximiser; the sub-gradient is any convex combination summing to
+$g$.) By contrast, for $y=\frac1n\sum_k x_k$ we get
+$\partial y/\partial x_k = 1/n = 0.25\ \forall k$, so average pooling
+distributes the gradient uniformly and every input contributes to learning.
+
+\subsection{Scale-space causality via the heat equation}
+\label{app:causality}
+Let $u(x,t) = (G_{\sqrt{t}} * f)(x)$ be the Gaussian scale-space of a 1-D
+signal $f$. It satisfies the 1-D heat equation
+\begin{equation}
+  \frac{\partial u}{\partial t} = \frac12 \frac{\partial^2 u}{\partial x^2},
+  \qquad u(x,0)=f(x),
+\end{equation}
+with $t=\sigma^2$. Differentiating $k$ times in $x$ and writing
+$v=\partial_x^k u$ shows $v$ obeys the same equation. The heat equation
+satisfies a \emph{maximum principle}: an interior local maximum of $v$ cannot
+increase and an interior local minimum cannot decrease with $t$, because at a
+local max $\partial_{xx} v \le 0 \Rightarrow \partial_t v \le 0$. Consequently
+the number of local extrema of $v$ is non-increasing in $t$
+(Hummel--Gidas, Lindeberg~\cite{lindeberg1994}).
+
+Edges are the zero-crossings of $u_{xx}$. A new zero-crossing of $u_{xx}$ could
+only appear if $u_{xx}$ developed a new extremum that then crossed zero --- but
+$u_{xxx}$'s extrema (hence $u_{xx}$'s monotone segments) cannot increase in
+number. Therefore no new zero-crossing (edge) is created as $\sigma$ grows;
+existing zero-crossings move continuously and vanish in pairs when two
+neighbouring extrema of $u_{xx}$ merge. This is exactly the behaviour observed
+in \cref{fig:causality}: the fingerprint is a family of arcs that only close
+upward, and the count is monotone non-increasing. It justifies coarse-to-fine
+edge tracking: every coarse-scale edge has a unique fine-scale ancestor.
+
+\emph{Caveat.} Strict monotonicity is a 1-D result. In 2-D the isotropic
+Gaussian is still the unique separable, rotationally-symmetric kernel that
+creates no new structure, but pathological 2-D counter-examples to strict
+extremum monotonicity exist; the edge-\emph{count} trend remains
+overwhelmingly decreasing, which our measurement (a $1.15\times$ slack in the
+monotonicity check) reflects.
