@@ -1,0 +1,26 @@
+{
+  "concrete": {
+    "density": 0.022613525390625,
+    "f1": 1.0,
+    "mean_component_len": 1482.0,
+    "n_components": 1,
+    "precision": 1.0,
+    "recall": 1.0,
+    "sample": "concrete_synth",
+    "source": "synthetic",
+    "t_high": 6.386499849455771,
+    "t_low": 1.2531456994600465
+  },
+  "pcb": {
+    "density": 0.0493927001953125,
+    "f1": 0.931020838828805,
+    "mean_component_len": 231.21428571428572,
+    "n_components": 14,
+    "precision": 1.0,
+    "recall": 0.8709438618136952,
+    "sample": "pcb_synth",
+    "source": "synthetic",
+    "t_high": 45.57543815837707,
+    "t_low": 0.31622687059915316
+  }
+}
